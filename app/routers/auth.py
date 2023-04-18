@@ -1,4 +1,7 @@
+import hashlib
 from datetime import timedelta
+from random import randbytes
+
 from fastapi import APIRouter, Request, Response, status, Depends, HTTPException
 
 from app import oauth2
@@ -7,6 +10,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from app.oauth2 import AuthJWT
 from ..config import settings
+from ..email import Email
 
 router = APIRouter()
 ACCESS_TOKEN_EXPIRES_IN = settings.ACCESS_TOKEN_EXPIRES_IN
@@ -24,7 +28,12 @@ async def create_user(payload: Schemas.CreateUserSchema, request: Request, db: S
     if payload.password != payload.passwordConfirm:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail='Passwords do not match')
-    #Хэширование пароля
+    mail_check_query = db.query(Models.User).filter(
+        Models.User.email == payload.email.lower())
+    if mail_check_query.first():
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail='Account with this email already exist')
+    # Хэширование пароля
     payload.password = utils.hash_password(payload.password)
     del payload.passwordConfirm
     new_user = Models.User(**payload.dict())
@@ -32,17 +41,40 @@ async def create_user(payload: Schemas.CreateUserSchema, request: Request, db: S
     db.commit()
     db.refresh(new_user)
 
+    try:
+        # Отправляем код подтверждения на почту
+        token = randbytes(10)
+        hashedCode = hashlib.sha256()
+        hashedCode.update(token)
+        verification_code = hashedCode.hexdigest()
+        user_query.update(
+            {'verification_code': verification_code}, synchronize_session=False)
+        db.commit()
+        url = f"{request.url.scheme}://{request.client.host}:{request.url.port}/api/auth/verifyemail/{token.hex()}"
+        await Email(new_user, url, [payload.email]).sendVerificationCode()
+    except Exception as error:
+        print('Error', error)
+        user_query.update(
+            {'verification_code': None}, synchronize_session=False)
+        db.commit()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail='There was an error sending email')
     return {'status': 'success', 'message': 'The user has been successfully registered'}
 
 
 @router.post('/login')
-def login(payload: Schemas.LoginUserSchema, response: Response, db: Session = Depends(get_db), Authorize: AuthJWT = Depends()):
+def login(payload: Schemas.LoginUserSchema, response: Response, db: Session = Depends(get_db),
+          Authorize: AuthJWT = Depends()):
     # Check if the user exist
     user = db.query(Models.User).filter(
         Models.User.login == payload.login.lower()).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail='Incorrect Email or Password')
+    # Check if user verified his email
+    if not user.verified:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Please verify your email address')
 
     # Check if the password is valid
     if not utils.verify_password(payload.password, user.password):
@@ -105,3 +137,27 @@ def logout(response: Response, Authorize: AuthJWT = Depends(), user_id: str = De
     response.set_cookie('logged_in', '', -1)
 
     return {'status': 'success'}
+
+
+@router.get('/verifyemail/{token}')
+def verify_me(token: str, db: Session = Depends(get_db)):
+    hashedCode = hashlib.sha256()
+    hashedCode.update(bytes.fromhex(token))
+    verification_code = hashedCode.hexdigest()
+    user_query = db.query(Models.User).filter(
+        Models.User.verification_code == verification_code)
+    db.commit()
+    user = user_query.first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid code or user doesn't exist")
+    if user.verified:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail='Email can only be verified once')
+    user_query.update(
+        {'verified': True, 'verification_code': None}, synchronize_session=False)
+    db.commit()
+    return {
+        "status": "success",
+        "message": "Account verified successfully"
+    }

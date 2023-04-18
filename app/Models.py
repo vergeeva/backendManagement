@@ -118,7 +118,7 @@ class BalanceCircle(BaseModel):  # Колесо жизненного балан�
     __tablename__ = 'balance_circle'  # имя таблицы
     idBalance = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                        default=uuid.uuid4)  # код техники
-    labelItem = Column(String, nullable=False) #
-    value = Column(Integer, nullable=False)
+    labelItem = Column(String, nullable=False)  # Наименование
+    value = Column(Integer, nullable=False)  # значение
     userId = Column(UUID(as_uuid=True), ForeignKey(
         'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя

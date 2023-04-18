@@ -9,6 +9,12 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_HOSTNAME: str
 
+    # EMAIL_USERNAME: str
+    # EMAIL_PASSWORD: str
+    # EMAIL_FROM: str
+    # EMAIL_PORT: int
+    # EMAIL_HOST: str
+
     JWT_PUBLIC_KEY: str
     JWT_PRIVATE_KEY: str
     REFRESH_TOKEN_EXPIRES_IN: int

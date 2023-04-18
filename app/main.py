@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from app.config import settings
-from app.routers import users, auth
+from app.routers import users, auth, balanceCircle
 
 app = FastAPI()
 
@@ -39,3 +39,4 @@ app.add_middleware(CORSMiddleware,
 
 app.include_router(auth.router, tags=['Auth'], prefix='/api/auth')
 app.include_router(users.router, tags=['Users'], prefix='/api/users')
+app.include_router(balanceCircle.router, tags=['Balance'], prefix='/api/balanceCircle')
