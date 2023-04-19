@@ -27,6 +27,18 @@ class CreateUserSchema(UserBaseSchema):
     verified: bool = False
 
 
+class UpdateUserSchema(BaseModel):
+    login: str
+    password: constr(min_length=8)
+    firstName: str
+    lastName: str
+    patronymic: str
+    email: EmailStr
+    id: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
 # Схемы для колеса баланса
 class CircleValueBaseSchema(BaseModel):
     labelItem: str
@@ -51,3 +63,33 @@ class UpdateValueSchema(BaseModel):
     created_at: datetime | None = None
     updated_at: datetime | None = None
 
+
+# Схемы для техник
+class TechnicBaseSchema(BaseModel):
+    settingsName: str
+    workTimer: int
+    shortBreak: int
+    longBreak: int
+    countOfCycles: int
+
+    class Config:
+        orm_mode = True
+
+
+class CreateTechnicSchema(TechnicBaseSchema):
+    userId: uuid.UUID | None = None
+
+
+class TechnicListSchema(BaseModel):
+    technics: List[TechnicBaseSchema]
+
+
+class UpdateTechnicSchema(BaseModel):
+    settingsName: str
+    workTimer: int
+    shortBreak: int
+    longBreak: int
+    countOfCycles: int
+    userId: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None

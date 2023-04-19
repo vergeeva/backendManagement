@@ -63,6 +63,7 @@ class TechnicsSettings(BaseModel):  # Настройки техники Помо
     __tablename__ = 'technics_settings'  # имя таблицы
     idTechnic = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                        default=uuid.uuid4)  # код техники
+    settingsName = Column(String, nullable=False)  # наименование
     workTimer = Column(Integer, nullable=False)  # рабочий таймер
     shortBreak = Column(Integer, nullable=False)  # короткий перерыв
     longBreak = Column(Integer, nullable=False)  # длинный перерыв
