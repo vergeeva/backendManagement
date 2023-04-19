@@ -29,8 +29,11 @@ class CreateUserSchema(UserBaseSchema):
 
 # Схемы для колеса баланса
 class CircleValueBaseSchema(BaseModel):
-    label: str
+    labelItem: str
     value: int
+
+    class Config:
+        orm_mode = True
 
 
 class BalanceCircleData(BaseModel):
@@ -38,12 +41,13 @@ class BalanceCircleData(BaseModel):
 
 
 class CreateValueSchema(CircleValueBaseSchema):
-    user_id: uuid.UUID | None = None
+    userId: uuid.UUID | None = None
 
 
 class UpdateValueSchema(BaseModel):
-    label: str
+    labelItem: str
     value: int
-    user_id: uuid.UUID | None = None
+    userId: uuid.UUID | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
+
