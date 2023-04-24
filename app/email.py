@@ -1,59 +1,41 @@
-from typing import List
+import os
+from fastapi import BackgroundTasks
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
-from pydantic import EmailStr, BaseModel
-from . import Models
-from .config import settings
-from jinja2 import Environment, select_autoescape, PackageLoader
 
-env = Environment(
-    loader=PackageLoader('app', 'templates'),
-    autoescape=select_autoescape(['html', 'xml'])
+from dotenv import load_dotenv
+load_dotenv('.env')
+
+class Envs:
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_FROM = os.getenv('MAIL_FROM')
+    MAIL_PORT = os.getenv('MAIL_PORT')
+    MAIL_SERVER = os.getenv('MAIL_SERVER')
+    MAIL_FROM_NAME = os.getenv('MAIN_FROM_NAME')
+
+
+conf = ConnectionConfig(
+    MAIL_USERNAME=Envs.MAIL_USERNAME,
+    MAIL_PASSWORD=Envs.MAIL_PASSWORD,
+    MAIL_FROM=Envs.MAIL_FROM,
+    MAIL_PORT=Envs.MAIL_PORT,
+    MAIL_SERVER=Envs.MAIL_SERVER,
+    MAIL_FROM_NAME=Envs.MAIL_FROM_NAME,
+    MAIL_TLS=True,
+    MAIL_SSL=False,
+    USE_CREDENTIALS=True,
+    TEMPLATE_FOLDER='./templates/email'
 )
 
-class EmailSchema(BaseModel):
-    email: List[EmailStr]
 
+async def send_email_async(subject: str, email_to: str, body: dict):
+    message = MessageSchema(
+        subject=subject,
+        recipients=[email_to],
+        body=body,
+        subtype='html',
+    )
 
-class Email:
-    def __init__(self, user: Models.User, url: str, email: List[EmailStr]):
-        self.name = user.name
-        self.sender = 'Codevo <admin@admin.com>'
-        self.email = email
-        self.url = url
-        pass
+    fm = FastMail(conf)
 
-    async def sendMail(self, subject, template):
-        # Define the config
-        conf = ConnectionConfig(
-            MAIL_PASSWORD=settings.EMAIL_PASSWORD,
-            MAIL_FROM=settings.EMAIL_FROM,
-            MAIL_PORT=settings.EMAIL_PORT,
-            MAIL_SERVER=settings.EMAIL_HOST,
-            MAIL_STARTTLS=False,
-            MAIL_SSL_TLS=False,
-            USE_CREDENTIALS=True,
-            VALIDATE_CERTS=True
-        )
-        # Generate the HTML template base on the template name
-        template = env.get_template(f'{template}.html')
-
-        html = template.render(
-            url=self.url,
-            first_name=self.name,
-            subject=subject
-        )
-
-        # Define the message options
-        message = MessageSchema(
-            subject=subject,
-            recipients=self.email,
-            body=html,
-            subtype="html"
-        )
-
-        # Send the email
-        fm = FastMail(conf)
-        await fm.send_message(message)
-
-    async def sendVerificationCode(self):
-        await self.sendMail('Ваш код подтверждения (Valid for 10min)', 'verification')
+    await fm.send_message(message, template_name='email.html')

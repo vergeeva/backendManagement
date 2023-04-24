@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from app.oauth2 import AuthJWT
 from ..config import settings
-from ..email import Email
+from ..email import send_email_async
 
 router = APIRouter()
 ACCESS_TOKEN_EXPIRES_IN = settings.ACCESS_TOKEN_EXPIRES_IN
@@ -51,7 +51,10 @@ async def create_user(payload: Schemas.CreateUserSchema, request: Request, db: S
             {'verification_code': verification_code}, synchronize_session=False)
         db.commit()
         url = f"{request.url.scheme}://{request.client.host}:{request.url.port}/api/auth/verifyemail/{token.hex()}"
-        await Email(new_user, url, [payload.email]).sendVerificationCode()
+        await send_email_async("Верификация аккаунта на сайте", new_user.email, {
+        'title': 'Привет, новый пользователь!',
+        'name': f'Код: {verification_code}'
+    })
     except Exception as error:
         print('Error', error)
         user_query.update(

@@ -13,6 +13,7 @@ def get_technics_data(db: Session = Depends(get_db), user_id: str = Depends(requ
     technics = db.query(Models.TechnicsSettings).filter(Models.TechnicsSettings.userId == user_id).all()
     return {'technics': technics}
 
+
 @router.post("/insert_technic", status_code=status.HTTP_201_CREATED, response_model=Schemas.TechnicBaseSchema)
 def insert_technic_settings(technics: Schemas.CreateTechnicSchema, db: Session = Depends(get_db), user_id: str = Depends(require_user)):
     technics.userId = uuid.UUID(user_id)

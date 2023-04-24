@@ -39,8 +39,10 @@ class UpdateUserSchema(BaseModel):
     updated_at: datetime | None = None
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 # Схемы для колеса баланса
 class CircleValueBaseSchema(BaseModel):
+    idBalance: uuid.UUID
     labelItem: str
     value: int
 
@@ -64,8 +66,10 @@ class UpdateValueSchema(BaseModel):
     updated_at: datetime | None = None
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 # Схемы для техник
 class TechnicBaseSchema(BaseModel):
+    idTechnic: uuid.UUID
     settingsName: str
     workTimer: int
     shortBreak: int
@@ -93,3 +97,117 @@ class UpdateTechnicSchema(BaseModel):
     userId: uuid.UUID | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Схемы для карточек канбан
+class KanbanCardBaseSchema(BaseModel):
+    idCard: uuid.UUID
+    typeOfCard: uuid.UUID
+
+    class Config:
+        orm_mode = True
+
+
+class CreateKanbanCardSchema(KanbanCardBaseSchema):
+    userId: uuid.UUID | None = None
+
+
+class UpdateKanbanCardSchema(BaseModel):
+    typeOfCard: uuid.UUID
+    userId: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class KanbanCardsDataSchema(BaseModel):
+    kanbans: List[KanbanCardBaseSchema]
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Для типов карточек канбан
+class TypeCardsKanbanBaseSchema(BaseModel):
+    idType: uuid.UUID
+    typeName: str
+
+    class Config:
+        orm_mode = True
+
+
+class CreateTypeCardsKanban(TypeCardsKanbanBaseSchema):
+    pass
+
+
+class UpdateTypeCardsKanban(BaseModel):
+    idType: uuid.UUID
+    typeName: str
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class TypeCardsKanbanData(BaseModel):
+    types: List[TypeCardsKanbanBaseSchema]
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Для задач в карточке канбан
+class TasksInCardBaseSchema(BaseModel):
+    idTaskInCard: uuid.UUID
+    taskText: str
+    isDone: bool = False
+
+    class Config:
+        orm_mode = True
+
+
+class CreateTaskInCardSchema(TasksInCardBaseSchema):
+    cardId: uuid.UUID
+
+
+class UpdateTaskInCardSchema(BaseModel):
+    idTaskInCard: uuid.UUID
+    taskText: str
+    isDone: bool
+    cardId: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class TaskInCardData(BaseModel):
+    tasks: List[TasksInCardBaseSchema]
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Схемы для записей в ежедневник
+class EntryDailyPlannerBaseSchema(BaseModel):
+    idTaskInCard: uuid.UUID
+    dailyTaskName: str
+    taskStart: datetime
+    taskEnd: datetime
+    taskColor: str
+    taskStatus: bool = False
+
+    class Config:
+        orm_mode = True
+
+
+class CreateEntrySchema(EntryDailyPlannerBaseSchema):
+    userId: uuid.UUID
+
+
+class UpdateEntrySchema(BaseModel):
+    idTaskInCard: uuid.UUID
+    dailyTaskName: str
+    taskStart: datetime
+    taskEnd: datetime
+    taskColor: str
+    taskStatus: bool
+    userId: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class EntryDailyPlannerData(BaseModel):
+    entries: List[EntryDailyPlannerBaseSchema]
+
+# ----------------------------------------------------------------------------------------------------------------------

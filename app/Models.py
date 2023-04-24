@@ -78,7 +78,7 @@ class telegramUsers(BaseModel):  # Пользователи telegram
     statusId = Column(Integer, nullable=False)  # статус чата
 
 
-class ItemsList(BaseModel):
+class ItemsList(BaseModel): # данные в списке пользователя
     __tablename__ = 'tasks_list'  # имя таблицы
     idTaskInList = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                           default=uuid.uuid4)  # код элемента в списке
@@ -88,7 +88,7 @@ class ItemsList(BaseModel):
         'user_lists.idUserList', ondelete='CASCADE'), nullable=False)  # код пользователя
 
 
-class UserLists(BaseModel):
+class UserLists(BaseModel): # Все списки пользователя
     __tablename__ = 'user_lists'  # имя таблицы
     idUserList = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                         default=uuid.uuid4)  # код списка
