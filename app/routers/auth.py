@@ -52,9 +52,9 @@ async def create_user(payload: Schemas.CreateUserSchema, request: Request, db: S
         db.commit()
         url = f"{request.url.scheme}://{request.client.host}:{request.url.port}/api/auth/verifyemail/{token.hex()}"
         await send_email_async("Верификация аккаунта на сайте", new_user.email, {
-        'title': 'Привет, новый пользователь!',
-        'name': f'Код: {verification_code}'
-    })
+            'title': 'Привет, новый пользователь!',
+            'name': f'Код: {verification_code}'
+        })
     except Exception as error:
         print('Error', error)
         user_query.update(

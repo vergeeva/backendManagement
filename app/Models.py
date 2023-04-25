@@ -48,7 +48,7 @@ class TaskInCards(BaseModel):  # задачи в карточках
 
 class EntryDailyPlanner(BaseModel):  # Запись в ежедневнике
     __tablename__ = 'daily_planner'  # имя таблицы
-    idTaskInCard = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
+    idEntry = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                           default=uuid.uuid4)  # код записи в ежедневнике
     dailyTaskName = Column(String, nullable=False)  # текст задачи
     taskStart = Column(Date, nullable=False)  # дата и время начала

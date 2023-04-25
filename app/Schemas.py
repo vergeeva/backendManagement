@@ -210,4 +210,107 @@ class UpdateEntrySchema(BaseModel):
 class EntryDailyPlannerData(BaseModel):
     entries: List[EntryDailyPlannerBaseSchema]
 
+
 # ----------------------------------------------------------------------------------------------------------------------
+# Схемы для списка пользователей
+class UserListBaseSchema(BaseModel):
+    idUserList: uuid.UUID
+    nameOfList: str
+
+    class Config:
+        orm_mode = True
+
+
+class CreateUserListSchema(UserListBaseSchema):
+    userId: uuid.UUID
+
+
+class UpdateUserListSchema(BaseModel):
+    idUserList: uuid.UUID
+    nameOfList: str
+    userId: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class UserListData(BaseModel):
+    lists: List[UserListBaseSchema]
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Схемы для данных в списке
+class ItemListBaseSchema(BaseModel):
+    idTaskInList: uuid.UUID
+    textOfItem: str
+    isChecked: bool = False
+
+    class Config:
+        orm_mode = True
+
+
+class CreateItemListSchema(ItemListBaseSchema):
+    userListsId: uuid.UUID  # Код списка, в котором хранится задача
+
+
+class UpdateItemListSchema(BaseModel):
+    idTaskInList: uuid.UUID
+    textOfItem: str
+    isChecked: bool
+    userListsId: uuid.UUID
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class ItemListData(BaseModel):
+    items: List[ItemListBaseSchema]
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Задачи в диаграмме Гантта
+class GanttChartTasksSchema(BaseModel):
+    idGanttTask: uuid.UUID
+    nameOfTask: str
+
+    class Config:
+        orm_mode = True
+
+
+class CreateGanttChartTasksSchema(GanttChartTasksSchema):
+    userId: uuid.UUID
+
+
+class UpdateGanttChartTasksSchema(BaseModel):
+    idGanttTask: uuid.UUID
+    nameOfTask: str
+    userId: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class GanttChartTasksData(BaseModel):
+    GanttTasks: List[GanttChartTasksSchema]
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Схемы для длительности задач в диаграмме Гантта
+
+class GanttChartTaskDurationBaseSchema(BaseModel):
+    idGanttTask: uuid.UUID
+    ganttTaskStart: datetime
+    ganttTaskEnd: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class CreateGanttChartTaskDurationSchema(GanttChartTaskDurationBaseSchema):
+    projectId: uuid.UUID
+
+
+class UpdateGanttChartTaskDurationSchema(BaseModel):
+    idGanttTask: uuid.UUID
+    ganttTaskStart: datetime
+    ganttTaskEnd: datetime
+    projectId: uuid.UUID
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
