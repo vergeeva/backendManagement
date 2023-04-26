@@ -17,11 +17,10 @@ class UserListResponse(UserListBaseSchema):
 
 
 class CreateUserListSchema(UserListBaseSchema):
-    userId: uuid.UUID
+    userId: uuid.UUID | None = None
 
 
 class UpdateUserListSchema(BaseModel):
-    idUserList: uuid.UUID
     nameOfList: str
     userId: uuid.UUID | None = None
     created_at: datetime | None = None
@@ -47,14 +46,13 @@ class ItemListResponse(ItemListBaseSchema):
 
 
 class CreateItemListSchema(ItemListBaseSchema):
-    userListsId: uuid.UUID  # Код списка, в котором хранится задача
+    userListsId: uuid.UUID | None = None # Код списка, в котором хранится задача
 
 
 class UpdateItemListSchema(BaseModel):
-    idTaskInList: uuid.UUID
     textOfItem: str
     isChecked: bool
-    userListsId: uuid.UUID
+    userListsId: uuid.UUID | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
 

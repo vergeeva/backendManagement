@@ -14,7 +14,7 @@ router = APIRouter()
 @router.get("/lists_data", response_model=listSchemas.UserListData)
 def get_lists_data(db: Session = Depends(get_db), user_id: str = Depends(require_user)):
     lists = db.query(Models.UserLists).filter(Models.UserLists.userId == user_id).all()
-    return {'stats': lists}
+    return {'lists': lists}
 
 
 # Добавить новый список

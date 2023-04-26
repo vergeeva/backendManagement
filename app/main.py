@@ -4,7 +4,7 @@ from starlette.middleware.gzip import GZipMiddleware
 from app.config import settings
 from app.email import EmailSchema
 from app.routers import users, auth, balanceCircle, userLists, typeOfCards, technicsSettings, taskInCards, kanbanCards, \
-    ganttChartTasks, ganttChartTaskDuration, entryDailyPlanner
+    ganttChartTasks, ganttChartTaskDuration, entryDailyPlanner, tasksList
 from app import email
 
 
@@ -47,6 +47,7 @@ app.include_router(auth.router, tags=['Auth'], prefix='/api/auth')
 app.include_router(users.router, tags=['Users'], prefix='/api/users')
 app.include_router(balanceCircle.router, tags=['Balance'], prefix='/api/balanceCircle')
 app.include_router(userLists.router, tags=['userLists'], prefix='/api/userLists')
+app.include_router(tasksList.router, tags=['tasksList'], prefix='/api/tasksList')
 app.include_router(typeOfCards.router, tags=['typeOfCards'], prefix='/api/typeOfCards')
 app.include_router(technicsSettings.router, tags=['technicsSettings'], prefix='/api/technicsSettings')
 app.include_router(taskInCards.router, tags=['taskInCards'], prefix='/api/taskInCards')
