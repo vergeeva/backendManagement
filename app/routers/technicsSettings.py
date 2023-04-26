@@ -3,19 +3,22 @@ import uuid
 from fastapi import APIRouter, Depends, status, APIRouter, Response, HTTPException
 from ..database import get_db
 from sqlalchemy.orm import Session
-from .. import Models, Schemas
+from .. import Models
+from ..Schemas import technicSchemas
 from app.oauth2 import require_user
 
 router = APIRouter()
 
-@router.get("/technics_data", response_model=Schemas.TechnicListSchema)
+
+@router.get("/technics_data", response_model=technicSchemas.TechnicListSchema)
 def get_technics_data(db: Session = Depends(get_db), user_id: str = Depends(require_user)):
     technics = db.query(Models.TechnicsSettings).filter(Models.TechnicsSettings.userId == user_id).all()
     return {'technics': technics}
 
 
-@router.post("/insert_technic", status_code=status.HTTP_201_CREATED, response_model=Schemas.TechnicBaseSchema)
-def insert_technic_settings(technics: Schemas.CreateTechnicSchema, db: Session = Depends(get_db), user_id: str = Depends(require_user)):
+@router.post("/insert_technic", status_code=status.HTTP_201_CREATED, response_model=technicSchemas.TechnicResponse)
+def insert_technic_settings(technics: technicSchemas.CreateTechnicSchema, db: Session = Depends(get_db),
+                            user_id: str = Depends(require_user)):
     technics.userId = uuid.UUID(user_id)
     new_item = Models.TechnicsSettings(**technics.dict())
     db.add(new_item)
@@ -24,8 +27,8 @@ def insert_technic_settings(technics: Schemas.CreateTechnicSchema, db: Session =
     return new_item
 
 
-@router.put('/{id}', response_model=Schemas.TechnicBaseSchema)
-def update_technic_settings(id: str, technic: Schemas.UpdateTechnicSchema, db: Session = Depends(get_db),
+@router.put('/{id}', response_model=technicSchemas.TechnicResponse)
+def update_technic_settings(id: str, technic: technicSchemas.UpdateTechnicSchema, db: Session = Depends(get_db),
                  user_id: str = Depends(require_user)):
     technic_query = db.query(Models.TechnicsSettings).filter(Models.TechnicsSettings.idTechnic == id)
     updated_technic = technic_query.first()

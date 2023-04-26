@@ -3,20 +3,22 @@ import uuid
 from fastapi import APIRouter, Depends, status, APIRouter, Response, HTTPException
 from ..database import get_db
 from sqlalchemy.orm import Session
-from .. import Models, Schemas
+from .. import Models
+from ..Schemas import balanceCircleSchemas
 from app.oauth2 import require_user
 
 router = APIRouter()
 
 
-@router.get("/circle_data", response_model=Schemas.BalanceCircleData)
+@router.get("/circle_data", response_model=balanceCircleSchemas.BalanceCircleData)
 def get_data_circle(db: Session = Depends(get_db), user_id: str = Depends(require_user)):
     stats = db.query(Models.BalanceCircle).filter(Models.BalanceCircle.userId == user_id).all()
     return {'stats': stats}
 
 
-@router.post("/insert_value", status_code=status.HTTP_201_CREATED, response_model=Schemas.CircleValueBaseSchema)
-def insert_value(stats: Schemas.CreateValueSchema, db: Session = Depends(get_db),
+@router.post("/insert_value", status_code=status.HTTP_201_CREATED,
+             response_model=balanceCircleSchemas.BalanceCircleResponse)
+def insert_value(stats: balanceCircleSchemas.CreateValueSchema, db: Session = Depends(get_db),
                  owner_id: str = Depends(require_user)):
     stats.userId = uuid.UUID(owner_id)
     new_item = Models.BalanceCircle(**stats.dict())
@@ -26,8 +28,8 @@ def insert_value(stats: Schemas.CreateValueSchema, db: Session = Depends(get_db)
     return new_item
 
 
-@router.put('/{id}', response_model=Schemas.CircleValueBaseSchema)
-def update_value(id: str, stat: Schemas.UpdateValueSchema, db: Session = Depends(get_db),
+@router.put('/{id}', response_model=balanceCircleSchemas.BalanceCircleResponse)
+def update_value(id: str, stat: balanceCircleSchemas.UpdateValueSchema, db: Session = Depends(get_db),
                  user_id: str = Depends(require_user)):
     stat_query = db.query(Models.BalanceCircle).filter(Models.BalanceCircle.idBalance == id)
     updated_stat = stat_query.first()
@@ -45,8 +47,8 @@ def update_value(id: str, stat: Schemas.UpdateValueSchema, db: Session = Depends
 
 
 @router.delete('/{id}')
-def delete_value(id: str,db: Session = Depends(get_db), user_id: str = Depends(require_user)):
-    stat_query=db.query(Models.BalanceCircle).filter(Models.BalanceCircle.idBalance == id)
+def delete_value(id: str, db: Session = Depends(get_db), user_id: str = Depends(require_user)):
+    stat_query = db.query(Models.BalanceCircle).filter(Models.BalanceCircle.idBalance == id)
     stat = stat_query.first()
     if not stat:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

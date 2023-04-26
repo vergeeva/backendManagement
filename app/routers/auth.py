@@ -5,12 +5,14 @@ from random import randbytes
 from fastapi import APIRouter, Request, Response, status, Depends, HTTPException
 
 from app import oauth2
-from .. import Schemas, Models, utils
+from .. import Models, utils
+from ..Schemas import userSchemas
 from sqlalchemy.orm import Session
 from ..database import get_db
 from app.oauth2 import AuthJWT
 from ..config import settings
-from ..email import send_email_async
+# from ..email import send_email_async
+
 
 router = APIRouter()
 ACCESS_TOKEN_EXPIRES_IN = settings.ACCESS_TOKEN_EXPIRES_IN
@@ -18,7 +20,7 @@ REFRESH_TOKEN_EXPIRES_IN = settings.REFRESH_TOKEN_EXPIRES_IN
 
 
 @router.post('/register', status_code=status.HTTP_201_CREATED)
-async def create_user(payload: Schemas.CreateUserSchema, request: Request, db: Session = Depends(get_db)):
+async def create_user(payload: userSchemas.CreateUserSchema, request: Request, db: Session = Depends(get_db)):
     user_query = db.query(Models.User).filter(
         Models.User.login == payload.login.lower())
     user = user_query.first()
@@ -51,10 +53,10 @@ async def create_user(payload: Schemas.CreateUserSchema, request: Request, db: S
             {'verification_code': verification_code}, synchronize_session=False)
         db.commit()
         url = f"{request.url.scheme}://{request.client.host}:{request.url.port}/api/auth/verifyemail/{token.hex()}"
-        await send_email_async("Верификация аккаунта на сайте", new_user.email, {
-            'title': 'Привет, новый пользователь!',
-            'name': f'Код: {verification_code}'
-        })
+        # await send_email_async("Верификация аккаунта на сайте", new_user.email, {
+        #     'title': 'Привет, новый пользователь!',
+        #     'name': f'Код: {verification_code}'
+        # })
     except Exception as error:
         print('Error', error)
         user_query.update(
@@ -66,7 +68,7 @@ async def create_user(payload: Schemas.CreateUserSchema, request: Request, db: S
 
 
 @router.post('/login')
-def login(payload: Schemas.LoginUserSchema, response: Response, db: Session = Depends(get_db),
+def login(payload: userSchemas.LoginUserSchema, response: Response, db: Session = Depends(get_db),
           Authorize: AuthJWT = Depends()):
     # Check if the user exist
     user = db.query(Models.User).filter(

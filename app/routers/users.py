@@ -1,21 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from ..database import get_db
 from sqlalchemy.orm import Session
-from .. import Models, Schemas, oauth2, utils
+from .. import Models, oauth2, utils
+from ..Schemas import userSchemas
 from app.oauth2 import require_user
 import uuid
 
 router = APIRouter()
 
 
-@router.get('/me', response_model=Schemas.UserBaseSchema)
+@router.get('/me', response_model=userSchemas.UserBaseSchema)
 def get_me(db: Session = Depends(get_db), user_id: str = Depends(oauth2.require_user)):
     user = db.query(Models.User).filter(Models.User.id == user_id).first()
     return user
 
 
-@router.put('/update_profile', response_model=Schemas.UserBaseSchema)
-def update_profile(user: Schemas.UpdateUserSchema, db: Session = Depends(get_db),
+@router.put('/update_profile', response_model=userSchemas.UserBaseSchema)
+def update_profile(user: userSchemas.UpdateUserSchema, db: Session = Depends(get_db),
                    user_id: str = Depends(require_user)):
     user_query = db.query(Models.User).filter(Models.User.id == user_id)
     updated_user = user_query.first()
