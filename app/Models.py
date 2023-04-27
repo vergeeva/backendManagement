@@ -1,3 +1,4 @@
+import datetime
 import uuid
 from .database import BaseModel
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, String, Boolean, text, Date, Integer
@@ -51,8 +52,8 @@ class EntryDailyPlanner(BaseModel):  # Запись в ежедневнике
     idEntry = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                           default=uuid.uuid4)  # код записи в ежедневнике
     dailyTaskName = Column(String, nullable=False)  # текст задачи
-    taskStart = Column(Date, nullable=False)  # дата и время начала
-    taskEnd = Column(Date, nullable=False)  # дата и время окончания
+    taskStart = Column(TIMESTAMP, nullable=False)  # дата и время начала
+    taskEnd = Column(TIMESTAMP, nullable=False)   # дата и время окончания
     taskColor = Column(String, nullable=False)  # цвет оформления задачи
     taskStatus = Column(Boolean, nullable=False)  # статус выполнения задачи
     userId = Column(UUID(as_uuid=True), ForeignKey(
@@ -110,8 +111,8 @@ class GanttChartTaskDuration(BaseModel):  # Длительность задач 
     __tablename__ = 'gantt_task_duration'  # имя таблицы
     idGanttTask = Column(Integer, unique=True, nullable=False,
                          primary_key=True, autoincrement=True)
-    ganttTaskStart = Column(Date, nullable=False)  # дата и время начала
-    ganttTaskEnd = Column(Date, nullable=False)  # дата и время окончания
+    ganttTaskStart = Column(TIMESTAMP, nullable=False)   # дата и время начала
+    ganttTaskEnd = Column(TIMESTAMP, nullable=False)   # дата и время окончания
     projectId = Column(Integer, ForeignKey('gantt_tasks.idGanttTask', ondelete='CASCADE'), nullable=False)  # код задачи в д. Гантта
 
 
