@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, date
 from typing import List
 import uuid
-from pydantic import BaseModel, EmailStr, constr
+from pydantic import BaseModel, EmailStr, constr, root_validator
 
 
 # Схемы для записей в ежедневник

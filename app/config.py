@@ -1,4 +1,7 @@
-from pydantic import BaseSettings
+from typing import Optional
+
+from aiosmtplib.smtp import DEFAULT_TIMEOUT
+from pydantic import BaseSettings, EmailStr, DirectoryPath
 
 
 class Settings(BaseSettings):
@@ -9,13 +12,6 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_HOSTNAME: str
 
-    # MAIL_USERNAME: str
-    # MAIL_PASSWORD: str
-    # MAIL_FROM: str
-    # MAIL_PORT: int
-    # MAIL_SERVER: str
-    # MAIL_FROM_NAME: str
-
     JWT_PUBLIC_KEY: str
     JWT_PRIVATE_KEY: str
     REFRESH_TOKEN_EXPIRES_IN: int
@@ -24,6 +20,15 @@ class Settings(BaseSettings):
 
     CLIENT_ORIGIN: str
 
+    MAIL_USERNAME = str
+    MAIL_PASSWORD = str
+    MAIL_FROM = str
+    MAIL_PORT = int
+    MAIL_SERVER = str
+    MAIL_STARTTLS = bool
+    MAIL_SSL_TLS = bool
+    USE_CREDENTIALS = bool
+    VALIDATE_CERTS = bool
 
     class Config:
         env_file = './.env'
