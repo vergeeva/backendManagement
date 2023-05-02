@@ -48,7 +48,7 @@ def update_item(id: str, item: listSchemas.UpdateItemListSchema, db: Session = D
 
 # Удалить конкретную задачу
 @router.delete('/{id}')
-def delete_value(id: str, db: Session = Depends(get_db),
+def delete_item(id: str, db: Session = Depends(get_db),
                  user_id: str = Depends(require_user)):
     item_query = db.query(Models.ItemsList).filter(Models.ItemsList.idTaskInList == id)
     item = item_query.first()

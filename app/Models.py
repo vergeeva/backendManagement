@@ -100,8 +100,8 @@ class UserLists(BaseModel): # Все списки пользователя
 
 class GanttChartTasks(BaseModel):  # Задачи в диаграмме Гантта
     __tablename__ = 'gantt_tasks'  # имя таблицы
-    idGanttTask = Column(Integer, unique=True, nullable=False,
-                         primary_key=True, autoincrement=True)
+    idGanttTask = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
+                        default=uuid.uuid4)
     nameOfTask = Column(String, nullable=False)  # наименование задачи
     userId = Column(UUID(as_uuid=True), ForeignKey(
         'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя
@@ -109,11 +109,11 @@ class GanttChartTasks(BaseModel):  # Задачи в диаграмме Гант
 
 class GanttChartTaskDuration(BaseModel):  # Длительность задач в д. Гантта
     __tablename__ = 'gantt_task_duration'  # имя таблицы
-    idGanttTask = Column(Integer, unique=True, nullable=False,
-                         primary_key=True, autoincrement=True)
+    idGanttDuration = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
+                        default=uuid.uuid4)
     ganttTaskStart = Column(TIMESTAMP, nullable=False)   # дата и время начала
     ganttTaskEnd = Column(TIMESTAMP, nullable=False)   # дата и время окончания
-    projectId = Column(Integer, ForeignKey('gantt_tasks.idGanttTask', ondelete='CASCADE'), nullable=False)  # код задачи в д. Гантта
+    ganttTaskId = Column(UUID(as_uuid=True), ForeignKey('gantt_tasks.idGanttTask', ondelete='CASCADE'), nullable=False)  # код задачи в д. Гантта
 
 
 class BalanceCircle(BaseModel):  # Колесо жизненного баланса

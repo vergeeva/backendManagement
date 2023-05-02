@@ -36,10 +36,10 @@ def update_entry(id: str, entry: entryDailyPlannerSchemas.UpdateEntrySchema, db:
 
     if not updated_entry:
         raise HTTPException(status_code=status.HTTP_200_OK,
-                            detail=f'No entry with this id: {id} found')
+                            detail=f'Нет записи с данным кодом: {id}!')
     if updated_entry.userId != uuid.UUID(user_id):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                            detail='You are not allowed to perform this action')
+                            detail='Вам запрещено выполнять это действие')
     entry.userId = user_id
     entry_query.update(entry.dict(exclude_unset=True), synchronize_session=False)
     db.commit()
@@ -52,10 +52,10 @@ def delete_entry(id: str,db: Session = Depends(get_db), user_id: str = Depends(r
     entry = entry_query.first()
     if not entry:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No entry with this id: {id} found')
+                            detail=f'Нет записи с данным кодом: {id}!')
     if entry.userId != uuid.UUID(user_id):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                            detail='You are not allowed to perform this action')
+                            detail='Вам запрещено выполнять это действие')
     entry_query.delete(synchronize_session=False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)

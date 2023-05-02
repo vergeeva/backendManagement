@@ -6,11 +6,14 @@ from pydantic import BaseModel, EmailStr, constr
 
 # Схемы для карточек канбан
 class KanbanCardBaseSchema(BaseModel):
-    idCard: uuid.UUID
     typeOfCard: uuid.UUID
 
     class Config:
         orm_mode = True
+
+
+class KanbanCardResponse(KanbanCardBaseSchema):
+    idCard: uuid.UUID
 
 
 class CreateKanbanCardSchema(KanbanCardBaseSchema):
@@ -25,17 +28,20 @@ class UpdateKanbanCardSchema(BaseModel):
 
 
 class KanbanCardsDataSchema(BaseModel):
-    kanbans: List[KanbanCardBaseSchema]
+    kanbans: List[KanbanCardResponse]
 
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Для типов карточек канбан
 class TypeCardsKanbanBaseSchema(BaseModel):
-    idType: uuid.UUID
     typeName: str
 
     class Config:
         orm_mode = True
+
+
+class TypeCardsKanbanResponse(TypeCardsKanbanBaseSchema):
+    idType: uuid.UUID
 
 
 class CreateTypeCardsKanban(TypeCardsKanbanBaseSchema):
@@ -43,20 +49,18 @@ class CreateTypeCardsKanban(TypeCardsKanbanBaseSchema):
 
 
 class UpdateTypeCardsKanban(BaseModel):
-    idType: uuid.UUID
     typeName: str
     created_at: datetime | None = None
     updated_at: datetime | None = None
 
 
 class TypeCardsKanbanData(BaseModel):
-    types: List[TypeCardsKanbanBaseSchema]
+    types: List[TypeCardsKanbanResponse]
 
 
 # ----------------------------------------------------------------------------------------------------------------------
 # Для задач в карточке канбан
 class TasksInCardBaseSchema(BaseModel):
-    idTaskInCard: uuid.UUID
     taskText: str
     isDone: bool = False
 
@@ -64,12 +68,15 @@ class TasksInCardBaseSchema(BaseModel):
         orm_mode = True
 
 
+class TasksInCardResponse(TasksInCardBaseSchema):
+    idTaskInCard: uuid.UUID
+
+
 class CreateTaskInCardSchema(TasksInCardBaseSchema):
-    cardId: uuid.UUID
+    cardId: uuid.UUID | None = None
 
 
 class UpdateTaskInCardSchema(BaseModel):
-    idTaskInCard: uuid.UUID
     taskText: str
     isDone: bool
     cardId: uuid.UUID | None = None
@@ -78,4 +85,4 @@ class UpdateTaskInCardSchema(BaseModel):
 
 
 class TaskInCardData(BaseModel):
-    tasks: List[TasksInCardBaseSchema]
+    tasks: List[TasksInCardResponse]

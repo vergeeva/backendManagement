@@ -52,3 +52,4 @@ app.include_router(ganttChartTaskDuration.router, tags=['ganttChartTaskDuration'
 app.include_router(entryDailyPlanner.router, tags=['entryDailyPlanner'], prefix='/api/entryDailyPlanner')
 
 app.include_router(email.router, tags=['email'], prefix='/email')
+

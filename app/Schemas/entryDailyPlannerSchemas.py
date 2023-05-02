@@ -19,6 +19,7 @@ class EntryDailyPlannerBaseSchema(BaseModel):
     def convert_date(cls, value):
         return value
 
+
 class EntryDailyPlannerResponse(EntryDailyPlannerBaseSchema):
     idEntry: uuid.UUID
 
