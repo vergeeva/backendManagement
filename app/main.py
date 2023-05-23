@@ -41,7 +41,7 @@ app.add_middleware(CORSMiddleware,
 app.include_router(auth.router, tags=['Auth'], prefix='/api/auth')
 app.include_router(users.router, tags=['Users'], prefix='/api/users')
 app.include_router(balanceCircle.router, tags=['Balance'], prefix='/api/balanceCircle')
-app.include_router(userLists.router, tags=['userLists'], prefix='/api/userLists')
+# app.include_router(userLists.router, tags=['userLists'], prefix='/api/userLists')
 app.include_router(tasksList.router, tags=['tasksList'], prefix='/api/tasksList')
 app.include_router(typeOfCards.router, tags=['typeOfCards'], prefix='/api/typeOfCards')
 app.include_router(technicsSettings.router, tags=['technicsSettings'], prefix='/api/technicsSettings')
@@ -52,4 +52,5 @@ app.include_router(ganttChartTaskDuration.router, tags=['ganttChartTaskDuration'
 app.include_router(entryDailyPlanner.router, tags=['entryDailyPlanner'], prefix='/api/entryDailyPlanner')
 
 app.include_router(email.router, tags=['email'], prefix='/email')
+# python -m uvicorn app.main:app --host localhost --port 8000 --reload
 

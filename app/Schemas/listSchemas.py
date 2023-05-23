@@ -46,7 +46,7 @@ class ItemListResponse(ItemListBaseSchema):
 
 
 class CreateItemListSchema(ItemListBaseSchema):
-    userListsId: uuid.UUID | None = None # Код списка, в котором хранится задача
+    userId: uuid.UUID | None = None
 
 
 class UpdateItemListSchema(BaseModel):

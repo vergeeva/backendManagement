@@ -85,17 +85,19 @@ class ItemsList(BaseModel): # данные в списке пользовате�
                           default=uuid.uuid4)  # код элемента в списке
     textOfItem = Column(String, nullable=False)  # текст элемента
     isChecked = Column(Boolean, nullable=False)  # сделано или нет
-    userListsId = Column(UUID(as_uuid=True), ForeignKey(
-        'user_lists.idUserList', ondelete='CASCADE'), nullable=False)  # код пользователя
-
-
-class UserLists(BaseModel): # Все списки пользователя
-    __tablename__ = 'user_lists'  # имя таблицы
-    idUserList = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
-                        default=uuid.uuid4)  # код списка
-    nameOfList = Column(String, nullable=False)  # название списка
     userId = Column(UUID(as_uuid=True), ForeignKey(
-        'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя
+            'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя
+    # userListsId = Column(UUID(as_uuid=True), ForeignKey(
+    #     'user_lists.idUserList', ondelete='CASCADE'), nullable=False)  # код пользователя
+
+
+# class UserLists(BaseModel): # Все списки пользователя
+#     __tablename__ = 'user_lists'  # имя таблицы
+#     idUserList = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
+#                         default=uuid.uuid4)  # код списка
+#     nameOfList = Column(String, nullable=False)  # название списка
+#     userId = Column(UUID(as_uuid=True), ForeignKey(
+#         'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя
 
 
 class GanttChartTasks(BaseModel):  # Задачи в диаграмме Гантта

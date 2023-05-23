@@ -27,9 +27,20 @@ class CreateUserSchema(UserBaseSchema):
     verified: bool = False
 
 
+class UserResponse(UserBaseSchema):
+    login: str
+
+
+class UserUpdatePassword(BaseModel):
+    password: constr(min_length=8)
+    passwordConfirm: str
+    id: uuid.UUID | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
 class UpdateUserSchema(BaseModel):
     login: str
-    password: constr(min_length=8)
     firstName: str
     lastName: str
     patronymic: str

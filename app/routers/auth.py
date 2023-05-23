@@ -54,9 +54,8 @@ async def create_user(payload: userSchemas.CreateUserSchema, request: Request, d
         verification_code = hashedCode.hexdigest()
         user_query.update(
             {'verification_code': verification_code}, synchronize_session=False)
-        # url = f"{request.url.scheme}://{request.client.host}:{request.url.port}/api/auth/verifyemail/{token.hex()}"
 
-        await email.send_auth_code(user.email, verification_code)
+        await email.send_auth_code(new_user.email, verification_code)
         db.commit()
     except Exception as error:
         print('Error', error)
@@ -64,8 +63,8 @@ async def create_user(payload: userSchemas.CreateUserSchema, request: Request, d
             {'verification_code': None}, synchronize_session=False)
         db.commit()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            detail='There was an error sending email')
-    return {'status': 'success', 'message': 'The user has been successfully registered'}
+                            detail='Возникли проблемы с отправкой кода на почту')
+    return {'status': 'success', 'message': 'Пользователь успешно зарегистрирован'}
 
 
 @router.post('/login')
@@ -76,11 +75,11 @@ def login(payload: userSchemas.LoginUserSchema, response: Response, db: Session 
         Models.User.login == payload.login.lower()).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail='Incorrect Login or Password')
+                            detail='Неверный логин или пароль')
     # Check if the password is valid
     if not utils.verify_password(payload.password, user.password):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail='Incorrect Login or Password')
+                            detail='Неверный логин или пароль')
 
     # Создаем access token
     access_token = Authorize.create_access_token(
@@ -102,7 +101,7 @@ def login(payload: userSchemas.LoginUserSchema, response: Response, db: Session 
     if not user.verified:
         return {'status': 'Успешно', 'access_token': access_token, 'message': 'Пожалуйста, подтвердите вашу почту'}
     # Send both access
-    return {'status': 'Успешно', 'access_token': access_token}
+    return {'status': 'Успешно', 'access_token': access_token, 'message': ''}
 
 
 @router.get('/refresh')

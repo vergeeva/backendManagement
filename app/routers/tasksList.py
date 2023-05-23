@@ -10,19 +10,19 @@ from app.oauth2 import require_user
 router = APIRouter()
 
 
-# Получить все задачи из конкретного списка
-@router.get("/tasks_in_list/{id}", response_model=listSchemas.ItemListData)
-def get_tasks_in_list(id: str, db: Session = Depends(get_db)):
-    items = db.query(Models.ItemsList).filter(Models.ItemsList.userListsId == id).all()
+# Получить все задачи из списка
+@router.get("/tasks_in_list", response_model=listSchemas.ItemListData)
+def get_tasks_in_list(db: Session = Depends(get_db), user_id: str = Depends(require_user)):
+    items = db.query(Models.ItemsList).filter(Models.ItemsList.userId == user_id).all()
     return {'items': items}
 
 
-# Добавить задачу в конкретный список
-@router.post("/insert_task_in_list/{id}", status_code=status.HTTP_201_CREATED,
+# Добавить задачу в список
+@router.post("/insert_task_in_list", status_code=status.HTTP_201_CREATED,
              response_model=listSchemas.ItemListResponse)
-def insert_task_in_list(id: str, item: listSchemas.CreateItemListSchema, db: Session = Depends(get_db),
+def insert_task_in_list(item: listSchemas.CreateItemListSchema, db: Session = Depends(get_db),
                         user_id: str = Depends(require_user)):
-    item.userListsId = uuid.UUID(id)
+    item.userId = uuid.UUID(user_id)
     new_item = Models.ItemsList(**item.dict())
     db.add(new_item)
     db.commit()

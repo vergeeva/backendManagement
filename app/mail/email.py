@@ -14,8 +14,12 @@ from app.database import get_db
 from app.oauth2 import require_user
 
 
-class EmailSchema(BaseModel):
+class EmailSendMessageSchema(BaseModel):
     email: EmailStr
+    code: str
+
+    class Config:
+        orm_mode = True
 
 
 conf = ConnectionConfig(
@@ -47,7 +51,7 @@ async def send_auth_code(email: EmailStr, code: str) -> JSONResponse:
     return JSONResponse(status_code=200, content={"message": "Сообщение было отправлено"})
 
 
-@router.get("/verify_profile")
+@router.get("/verify_profile") # Для отправки сообщения для зарегистрированного пользователя
 async def verify_profile_mail(user_id: str = Depends(require_user), db: Session = Depends(get_db)) -> JSONResponse:
     user_query = db.query(Models.User).filter(Models.User.id == user_id)  # Запрос на поиск текущего пользователя
     user = user_query.first()  # Берем данные записи пользователя
@@ -74,15 +78,33 @@ async def verify_profile_mail(user_id: str = Depends(require_user), db: Session 
     return JSONResponse(status_code=200, content={"message": "Сообщение было отправлено"})
 
 
-@router.get("/verify_auth_code/{user_specified_code}")  # проверка введенного юзером кода
-async def verify_profile_mail(user_specified_code: str, user_id: str = Depends(require_user),
-                              db: Session = Depends(get_db)) -> JSONResponse:
+@router.get("/verify_auth_code/{user_specified_code}")  # проверка введенного зарегистрированного пользователя кода
+async def verify_profile_mail(user_specified_code: str,
+                              db: Session = Depends(get_db), user_id: str = Depends(require_user)) -> JSONResponse:
     user_query = db.query(Models.User).filter(Models.User.id == user_id)
     user = user_query.first()  # запрос в бд и взятие объекта пользователь
     if not user:  # если такого не нашлось в базе
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail='Пользователь не найден')
     if user.verification_code == user_specified_code:  # если коды совпали
+        user_query.update(  # стираем код в базе, ведь в нем нет нужды больше
+            {'verified': True, 'verification_code': None}, synchronize_session=False)
+        db.commit()  # отправляем изменения
+        return JSONResponse(status_code=200, content={"message": "Почта успешно подтверждена"})
+        # возвращаем сообщение об успешном выполнении
+    else:  # если коды не совпали, то сообщаем в виде json об этом
+        return JSONResponse(status_code=200, content={"message": "Неверный код подтверждения! Проверьте ввод"})
+
+
+@router.post("/verify_mail_not_auth")  # проверка введенного незарегистрированного пользователя кода
+async def verify_profile_not_auth(email: EmailSendMessageSchema,
+                              db: Session = Depends(get_db)) -> JSONResponse:
+    user_query = db.query(Models.User).filter(Models.User.email == email.email)
+    user = user_query.first()  # запрос в бд и взятие объекта пользователь
+    if not user:  # если такого не нашлось в базе
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail='Пользователь не найден')
+    if user.verification_code == email.code:  # если коды совпали
         user_query.update(  # стираем код в базе, ведь в нем нет нужды больше
             {'verified': True, 'verification_code': None}, synchronize_session=False)
         db.commit()  # отправляем изменения
