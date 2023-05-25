@@ -10,7 +10,6 @@ class EntryDailyPlannerBaseSchema(BaseModel):
     taskStart: datetime
     taskEnd: datetime
     taskColor: str
-    taskStatus: bool = False
 
     class Config:
         orm_mode = True
@@ -33,7 +32,6 @@ class UpdateEntrySchema(BaseModel):
     taskStart: datetime
     taskEnd: datetime
     taskColor: str
-    taskStatus: bool
     userId: uuid.UUID | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None

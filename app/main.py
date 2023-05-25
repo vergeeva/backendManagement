@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
-from app.routers import users, auth, balanceCircle, userLists, typeOfCards, technicsSettings, taskInCards, kanbanCards, \
+from app.routers import users, auth, balanceCircle, taskInCards, kanbanCards, \
     ganttChartTasks, ganttChartTaskDuration, entryDailyPlanner, tasksList
 from app.mail import email
 
@@ -43,8 +43,8 @@ app.include_router(users.router, tags=['Users'], prefix='/api/users')
 app.include_router(balanceCircle.router, tags=['Balance'], prefix='/api/balanceCircle')
 # app.include_router(userLists.router, tags=['userLists'], prefix='/api/userLists')
 app.include_router(tasksList.router, tags=['tasksList'], prefix='/api/tasksList')
-app.include_router(typeOfCards.router, tags=['typeOfCards'], prefix='/api/typeOfCards')
-app.include_router(technicsSettings.router, tags=['technicsSettings'], prefix='/api/technicsSettings')
+# app.include_router(typeOfCards.router, tags=['typeOfCards'], prefix='/api/typeOfCards')
+# app.include_router(technicsSettings.router, tags=['technicsSettings'], prefix='/api/technicsSettings')
 app.include_router(taskInCards.router, tags=['taskInCards'], prefix='/api/taskInCards')
 app.include_router(kanbanCards.router, tags=['kanbanCards'], prefix='/api/kanbanCards')
 app.include_router(ganttChartTasks.router, tags=['ganttChartTasks'], prefix='/api/ganttChartTasks')

@@ -22,29 +22,28 @@ class User(BaseModel):  # Пользователи
 
 class KanbanCards(BaseModel):  # Карточки канбан
     __tablename__ = 'kanban_cards'  # имя таблицы
-    idCard = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                     default=uuid.uuid4)  # код карточки канбан
-    typeOfCard = Column(UUID(as_uuid=True), ForeignKey(
-        'cards_type.idType', ondelete='CASCADE'), nullable=False)  # тип карточки
+    title = Column(String, nullable=False)   # тип карточки
     userId = Column(UUID(as_uuid=True), ForeignKey(
-        'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя
+        'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя, чья карточка
 
 
-class TypeOfCards(BaseModel):  # Типы карточек
-    __tablename__ = 'cards_type'  # имя таблицы
-    idType = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
-                    default=uuid.uuid4)  # код типа карточки
-    typeName = Column(String, unique=True, nullable=False)  # имя типа карточки
+# class TypeOfCards(BaseModel):  # Типы карточек
+#     __tablename__ = 'cards_type'  # имя таблицы
+#     idType = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
+#                     default=uuid.uuid4)  # код типа карточки
+#     typeName = Column(String, unique=True, nullable=False)  # имя типа карточки
 
 
 class TaskInCards(BaseModel):  # задачи в карточках
     __tablename__ = 'task_in_cards'  # имя таблицы
-    idTaskInCard = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
+    id = Column(UUID(as_uuid=True), primary_key=True, nullable=False,
                           default=uuid.uuid4)  # код задачи в карточке
-    cardId = Column(UUID(as_uuid=True), ForeignKey(
-        'kanban_cards.idCard', ondelete='CASCADE'), nullable=False)  # код карточки
-    taskText = Column(String, nullable=False)  # текст задачи
-    isDone = Column(Boolean, nullable=False)  # зачеркнута или нет
+    kanbanCardId = Column(UUID(as_uuid=True), ForeignKey(
+        'kanban_cards.id', ondelete='CASCADE'), nullable=False)  # код карточки
+    title = Column(String, nullable=False)  # Заголовок задачи
+    description = Column(String, nullable=False)  # Описание задачи
 
 
 class EntryDailyPlanner(BaseModel):  # Запись в ежедневнике
@@ -55,7 +54,6 @@ class EntryDailyPlanner(BaseModel):  # Запись в ежедневнике
     taskStart = Column(TIMESTAMP, nullable=False)  # дата и время начала
     taskEnd = Column(TIMESTAMP, nullable=False)   # дата и время окончания
     taskColor = Column(String, nullable=False)  # цвет оформления задачи
-    taskStatus = Column(Boolean, nullable=False)  # статус выполнения задачи
     userId = Column(UUID(as_uuid=True), ForeignKey(
         'users.id', ondelete='CASCADE'), nullable=False)  # код пользователя
 

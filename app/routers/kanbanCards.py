@@ -9,16 +9,19 @@ from app.oauth2 import require_user
 
 router = APIRouter()
 
-@router.get("/circle_kanban_card", response_model=kanbanSchemas.KanbanCardsDataSchema)
-def get_kanban_card(db: Session = Depends(get_db), user_id: str = Depends(require_user)):
-    cards = db.query(Models.KanbanCards).filter(Models.KanbanCards.userId == user_id).all()
-    return {'kanbans': cards}
+
+@router.get("/kanban_cards", response_model=kanbanSchemas.KanbanCardsDataSchema)
+def get_kanban_cards(db: Session = Depends(get_db), user_id: str = Depends(require_user)):
+    columns = db.query(Models.KanbanCards).filter(Models.KanbanCards.userId == user_id).all()
+    for column in columns:
+        column.cards = db.query(Models.TaskInCards).filter(Models.TaskInCards.kanbanCardId == column.id).all()
+    return {'columns': columns}
 
 
 @router.post("/insert_kanban_card", status_code=status.HTTP_201_CREATED,
-             response_model=kanbanSchemas.KanbanCardResponse)
+             response_model=kanbanSchemas.KanbanCardResponseInsert)
 def insert_kanban_card(kanbans: kanbanSchemas.CreateKanbanCardSchema, db: Session = Depends(get_db),
-                 owner_id: str = Depends(require_user)):
+                       owner_id: str = Depends(require_user)):
     kanbans.userId = uuid.UUID(owner_id)
     new_item = Models.KanbanCards(**kanbans.dict())
     db.add(new_item)
@@ -29,9 +32,9 @@ def insert_kanban_card(kanbans: kanbanSchemas.CreateKanbanCardSchema, db: Sessio
 
 @router.put('/{id}', response_model=kanbanSchemas.KanbanCardResponse)
 def update_kanban_card(id: str, kanban: kanbanSchemas.UpdateKanbanCardSchema, db: Session = Depends(get_db),
-                 user_id: str = Depends(require_user)):
+                       user_id: str = Depends(require_user)):
     # Запрос в базу данных и получении искомой записи
-    kanban_query = db.query(Models.KanbanCards).filter(Models.KanbanCards.idCard == id)
+    kanban_query = db.query(Models.KanbanCards).filter(Models.KanbanCards.id == id)
     updated_kanban = kanban_query.first()
 
     if not updated_kanban:  # Если запись не обнаружена
