@@ -47,7 +47,7 @@ class GanttChartTaskDurationBaseSchema(BaseModel):
 
 
 class GanttChartTaskDurationResponse(GanttChartTaskDurationBaseSchema):
-    idGanttDuration: uuid.UUID
+    idGanttDuration: uuid.UUID | None = None
 
 
 class CreateGanttChartTaskDurationSchema(GanttChartTaskDurationBaseSchema):
@@ -56,9 +56,15 @@ class CreateGanttChartTaskDurationSchema(GanttChartTaskDurationBaseSchema):
 
 class UpdateGanttChartTaskDurationSchema(BaseModel):
     ganttTaskStart: datetime
-    ganttTaskId: uuid.UUID | None = None
+    ganttTaskEnd: datetime
+    ganttTaskId: uuid.UUID
     created_at: datetime | None = None
     updated_at: datetime | None = None
+
+
+class UpdateDurationResponse(GanttChartTaskDurationBaseSchema):
+    ganttTaskId: uuid.UUID
+    idGanttDuration: uuid.UUID
 
 
 class GanttChartTaskDurationList(BaseModel):

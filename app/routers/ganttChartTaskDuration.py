@@ -32,7 +32,7 @@ def insert_duration(id: str, durations: ganttSchemas.CreateGanttChartTaskDuratio
 
 
 # Обновить длительность
-@router.put('/{id}', response_model=ganttSchemas.GanttChartTaskDurationResponse)
+@router.put('/{id}', response_model=ganttSchemas.UpdateDurationResponse)
 def update_duration(id: str, duration: ganttSchemas.UpdateGanttChartTaskDurationSchema, db: Session = Depends(get_db),
                     user_id: str = Depends(require_user)):
     duration_query = db.query(Models.GanttChartTaskDuration).filter(Models.GanttChartTaskDuration.idGanttDuration == id)
