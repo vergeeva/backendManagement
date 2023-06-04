@@ -20,7 +20,6 @@ async def add_cors_headers(request, call_next):
     response.headers["Access-Control-Allow-Credentials"] = "true"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    # response.headers["Set-Cookie"] = "access_token, refresh_token,logged_in"
     return response
 
 
