@@ -43,12 +43,9 @@ def update_profile(user: userSchemas.UpdateUserSchema, db: Session = Depends(get
     if userSameMail and updated_user.id != userSameMail.id:  # Если совпадение нашлось
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail='Аккаунт с данной почтой уже существует')
-    if updated_user.id != userSameMail.id:
-        user_query.update(  # Почта изменена, ее снова надо верифицировать
-            {'verified': False, 'verification_code': None}, synchronize_session=False)
+    else:
+        user_query.update(user.dict(exclude_unset=True), synchronize_session=False)
         db.commit()
-    user_query.update(user.dict(exclude_unset=True), synchronize_session=False)
-    db.commit()
     return updated_user
 
 
