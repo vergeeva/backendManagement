@@ -78,28 +78,28 @@
 
 ### КОЛЕСО ЖИЗНЕННОГО БАЛАНСА
 
-<details><summary>Получить данные по колесу баланса авторизованного пользателя</summary>
+<details><summary>Получить данные по колесу баланса авторизованного пользователя</summary>
       <br>
   
     /api/balanceCircle/circle_data
     
   > Метод запроса  - GET
 </details>
-<details><summary>Добавить элемент колеса баланса авторизованного пользателя</summary>
+<details><summary>Добавить элемент колеса баланса авторизованного пользователя</summary>
     <br>
   
     /api/balanceCircle/insert_value
         
   > Метод запроса  - POST
 </details>
-<details><summary>Обновить элемент колеса баланса (по коду) авторизованного пользателя</summary>
+<details><summary>Обновить элемент колеса баланса (по коду) авторизованного пользователя</summary>
       <br>
   
     /api/balanceCircle/{id}
         
   > Метод запроса  - PUT
 </details>
-<details><summary>Удалить элемент колеса баланса (по коду) авторизованного пользателя</summary>
+<details><summary>Удалить элемент колеса баланса (по коду) авторизованного пользователя</summary>
       <br>
   
     /api/balanceCircle/{id}
@@ -109,28 +109,28 @@
 
 ### СПИСОК ЗАДАЧ
 
-<details><summary>Получить данные по списку дел авторизованного пользателя</summary>
+<details><summary>Получить данные по списку дел авторизованного пользователя</summary>
       <br>
   
     /api/tasksList/tasks_in_list
     
   > Метод запроса  - GET
 </details>
-<details><summary>Добавить элемент списка дел авторизованного пользателя</summary>
+<details><summary>Добавить элемент списка дел авторизованного пользователя</summary>
     <br>
   
     /api/tasksList/insert_task_in_list
         
   > Метод запроса  - POST
 </details>
-<details><summary>Обновить элемент списка дел (по коду) авторизованного пользателя</summary>
+<details><summary>Обновить элемент списка дел (по коду) авторизованного пользователя</summary>
       <br>
   
     /api/tasksList/{id}
         
   > Метод запроса  - PUT
 </details>
-<details><summary>Удалить элемент списка дел (по коду) авторизованного пользателя</summary>
+<details><summary>Удалить элемент списка дел (по коду) авторизованного пользователя</summary>
       <br>
   
     /api/tasksList/{id}
@@ -140,31 +140,242 @@
 
 ### КАНБАН КАРТОЧКИ
 
-<details><summary>Получить данные по карточкам канбан авторизованного пользателя</summary>
+<details><summary>Получить данные по карточкам канбан авторизованного пользователя</summary>
       <br>
   
     /api/kanbanCards/kanban_cards
 
   > Метод запроса  - GET
 </details>
-<details><summary>Добавить карточку канбан авторизованного пользателя</summary>
+<details><summary>Добавить карточку канбан авторизованного пользователя</summary>
     <br>
   
     /api/kanbanCards/insert_kanban_card
     
   > Метод запроса  - POST
 </details>
-<details><summary>Обновить карточку канбан (по коду) авторизованного пользателя</summary>
+<details><summary>Обновить карточку канбан (по коду) авторизованного пользователя</summary>
       <br>
   
     /api/kanbanCards/{id}
     
   > Метод запроса  - PUT
 </details>
-<details><summary>Удалить карточку канбан (по коду) авторизованного пользателя</summary>
+<details><summary>Удалить карточку канбан (по коду) авторизованного пользователя</summary>
       <br>
   
     /api/kanbanCards/{id}
     
   > Метод запроса  - DELETE
+</details>
+
+### ЗАДАЧИ В КАНБАН КАРТОЧКАХ
+
+<details><summary>Получить данные по задачам в карточке канбан авторизованного пользователя</summary>
+      <br>
+  
+    /api/taskInCards/tasks_in_card/{id}
+
+  > Метод запроса  - GET
+</details>
+<details><summary>Добавить задачу в карточку канбан авторизованного пользователя</summary>
+    <br>
+  
+    /api/taskInCards/insert_task/{id}
+    
+  > Метод запроса  - POST
+</details>
+<details><summary>Обновить задачу в карточке канбан (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/taskInCards/{id}
+    
+  > Метод запроса  - PUT
+</details>
+<details><summary>Удалить задачу в карточке канбан (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/taskInCards/{id}
+    
+  > Метод запроса  - DELETE
+</details>
+
+### ЗАДАЧИ ДЛЯ ДИАГРАММЫ ГАНТА
+
+<details><summary>Получить данные по задачам в диаграмме Ганта авторизованного пользователя</summary>
+      <br>
+  
+    /api/ganttChartTasks/gantt_tasks_data
+
+  > Метод запроса  - GET
+</details>
+<details><summary>Добавить задачу в диаграмму Ганта авторизованного пользователя</summary>
+    <br>
+  
+    /api/ganttChartTasks/insert_gantt_task
+    
+  > Метод запроса  - POST
+</details>
+<details><summary>Обновить задачу в диаграмме Ганта (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/ganttChartTasks/{id}
+    
+  > Метод запроса  - PUT
+</details>
+<details><summary>Удалить задачу в диаграмме Ганта (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/ganttChartTasks/{id}
+    
+  > Метод запроса  - DELETE
+</details>
+
+### ДЛИТЕЛЬНОСТЬ ЗАДАЧ ДЛЯ ДИАГРАММЫ ГАНТА
+
+<details><summary>Получить данные по длительностям задачи в диаграмме Ганта авторизованного пользователя</summary>
+      <br>
+  
+    /api/ganttChartTaskDuration/gantt_durations_data/{id}
+
+  > Метод запроса  - GET
+</details>
+<details><summary>Добавить длительность задачи в диаграмму Ганта авторизованного пользователя</summary>
+    <br>
+  
+    /api/ganttChartTaskDuration/insert_duration/{id}
+    
+  > Метод запроса  - POST
+</details>
+<details><summary>Обновить длительность задачи в диаграмме Ганта (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/ganttChartTaskDuration/{id}
+    
+  > Метод запроса  - PUT
+</details>
+<details><summary>Удалить длительность задачи в диаграмме Ганта (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/ganttChartTaskDuration/{id}
+    
+  > Метод запроса  - DELETE
+</details>
+
+### ЗАПИСИ В ЕЖЕДНЕВНИКЕ
+
+<details><summary>Получить данные по записям в ежедневнике авторизованного пользователя</summary>
+      <br>
+  
+    /api/entryDailyPlanner/DailyPlanner/entry_data
+
+  > Метод запроса  - GET
+</details>
+<details><summary>Добавить запись в ежедневник авторизованного пользователя</summary>
+    <br>
+  
+    /api/entryDailyPlanner/insert_entry
+    
+  > Метод запроса  - POST
+</details>
+<details><summary>Обновить запись в ежедневнике (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/entryDailyPlanner/{id}
+    
+  > Метод запроса  - PUT
+</details>
+<details><summary>Удалить запись в ежедневнике (по коду) авторизованного пользователя</summary>
+      <br>
+  
+    /api/entryDailyPlanner/{id}
+    
+  > Метод запроса  - DELETE
+</details>
+
+### ВЗАИМОДЕЙСТВИЕ С ПОЧТОЙ
+
+<details><summary>Отправка сообщения на почту зарегистрированного пользователя</summary>
+      <br>
+  
+    /email/verify_profile
+
+  > Метод запроса  - GET
+</details>
+<details><summary>Сравнить коды подтверждения: отправленный и введенный</summary>
+    <br>
+  
+    /email/verify_auth_code/{user_specified_code}
+
+  > Метод запроса  - GET
+</details>
+<details><summary>Сравнение кодов подтверждения при регистрации</summary>
+      <br>
+  
+    /email/verify_mail_not_auth
+    
+  > Метод запроса  - POST
+</details>
+
+### СХЕМА ДАННЫХ
+
+> Русифицированная схема данных
+> 
+> ![image](https://github.com/vergeeva/backendManagement/assets/61785118/38378c20-80e5-4f95-857f-0379500c72e6)
+
+<details><summary>Взаимодействие с Docker</summary>
+<br> Запуск Docker
+  
+    docker-compose up -d
+<br> Остановка Docker
+  
+    docker-compose down
+<br> Создание расширения
+  
+    docker exec -it <Имя_контейнера> bash
+
+<br> Вход в запущенную базу
+  
+    psql -U <Имя_пользователя> <Имя_базы_данных>
+<br> Установка модуля uuid-ossp
+  
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+</details>
+
+<details><summary>Миграции базы данных</summary>
+<br> Создание миграции
+  
+    alembic revision --autogenerate -m "имя_миграции"
+<br> Отправка изменений в базу
+  
+    alembic upgrade head
+</details>
+
+<details><summary>Переменные, указанные в .env файле</summary>
+    
+    DATABASE_PORT
+    POSTGRES_PASSWORD
+    POSTGRES_USER
+    POSTGRES_DB
+    POSTGRES_HOST
+    POSTGRES_HOSTNAME
+    
+    MAIL_USERNAME
+    MAIL_PASSWORD
+    MAIL_FROM
+    MAIL_PORT
+    MAIL_SERVER
+    MAIL_STARTTLS=False
+    MAIL_SSL_TLS=True
+    USE_CREDENTIALS=True
+    VALIDATE_CERTS=True
+    
+    ACCESS_TOKEN_EXPIRES_IN
+    REFRESH_TOKEN_EXPIRES_IN
+    JWT_ALGORITHM
+    
+    CLIENT_ORIGIN
+    
+    JWT_PRIVATE_KEY
+    JWT_PUBLIC_KEY
 </details>
