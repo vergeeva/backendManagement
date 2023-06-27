@@ -321,7 +321,7 @@
 
 > Русифицированная схема данных
 > 
-> ![image](https://github.com/vergeeva/backendManagement/assets/61785118/38378c20-80e5-4f95-857f-0379500c72e6)
+> ![image](https://github.com/vergeeva/backendManagement/assets/61785118/ef679b46-ceab-4b1c-929c-f3adee5873c0)
 
 <details><summary>Взаимодействие с Docker</summary>
 <br> Запуск Docker
